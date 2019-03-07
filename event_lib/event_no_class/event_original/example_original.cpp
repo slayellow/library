@@ -1,4 +1,4 @@
-#include "event.h"
+#include "event_original.h"
 #include <iostream>
 #include <unistd.h>
 #include <pthread.h>
@@ -11,12 +11,12 @@ EVENT event;
 int main(void){
 	EVENT_INIT(&event);
 	int i;
-	int id[1];
-	for(i=0;i<1;i++){
+	int id[4];
+	for(i=0;i<4;i++){
 		id[i] = i;
 		pthread_create(&tid[i], NULL, thread, (void*)&id[i]);
 	}
-	for(i=0; i<1; i++){
+	for(i=0; i<4; i++){
 		pthread_join(tid[i], NULL);
 	}
 	EVENT_DESTROY(&event);
@@ -24,7 +24,7 @@ int main(void){
 }
 
 void *thread(void *arg){
-	// EVENT_RESET(&event); // non-signal
+	//EVENT_RESET(&event); // non-signal
 	EVENT_SET(&event);	// signal
 	EVENT_WAIT(&event);
 	std::cout << " what thread num ? " << ((int *)&arg) <<" , a : " << a++ << std::endl;

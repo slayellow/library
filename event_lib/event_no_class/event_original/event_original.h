@@ -7,7 +7,6 @@
 // 리눅스인 경우
 #else  
 #include <pthread.h>  
-typedef unsigned long DWORD;  
 typedef struct {  
    pthread_mutex_t mutex; // Mutex 선언
    pthread_cond_t cond;  // 조건변수 선언
@@ -15,7 +14,7 @@ typedef struct {
 } mrevent;  
    
 #define EVENT     mrevent 
- 
+
 #endif     
 // 함수   
 void EVENT_INIT(EVENT *event){  
@@ -43,9 +42,10 @@ void EVENT_WAIT(EVENT *event){
       WaitForSingleObject(*event, INFINITE);  
 #else  
       pthread_mutex_lock(&event->mutex); // critical section start 
-      while (!event->triggered)  
+      while (!event->triggered)
            pthread_cond_wait(&event->cond, &event->mutex); // 조건변수 cond로 시그널 전달 대기
 		//pthread_cond_timedwait(&event->cond, &event->mutex, timeout); // 시간 설정 가능
+	
 	pthread_mutex_unlock(&event->mutex);  // critical section end
 #endif  
 }  
@@ -73,4 +73,3 @@ void EVENT_RESET(EVENT *event){
 
   
 #endif  
-
